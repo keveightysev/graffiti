@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 
+import CanvasWrapper from '../styles/Canvas';
+
 const Canvas = () => {
   const [isPainting, setIsPainting] = useState(false);
   const [position, setPosition] = useState({ offsetX: 0, offsetY: 0 });
@@ -16,6 +18,7 @@ const Canvas = () => {
   };
 
   const onDown = ({ nativeEvent }) => {
+    console.log(nativeEvent);
     const { offsetX, offsetY } = nativeEvent;
     setIsPainting(true);
     setPosition({ offsetX, offsetY });
@@ -23,10 +26,19 @@ const Canvas = () => {
 
   const onMove = ({ nativeEvent }) => {
     if (isPainting) {
-      const { offsetX, offsetY } = nativeEvent;
-      setPosition({ offsetX, offsetY });
+      let { offsetX, offsetY } = nativeEvent;
+      const rect = canvasRef.current.getBoundingClientRect();
+      const canvas = canvasRef.current;
+      offsetX =
+        ((offsetX - rect.left) / (rect.right - rect.left)) * canvas.width;
+      offsetY =
+        ((offsetY - rect.top) / (rect.bottom - rect.top)) * canvas.height;
+      setPosition({
+        offsetX,
+        offsetY,
+      });
       spray(canvasRef.current);
-      console.log(position);
+      //   canvasRef.current.toBlob(blob => console.log(blob), 'image/jpeg');
     }
   };
 
@@ -38,7 +50,7 @@ const Canvas = () => {
     const ctx = canvas.getContext('2d');
     ctx.fillStyle = '#000000';
     ctx.strokeStyle = '#000000';
-    ctx.lineWidth = 100;
+    ctx.lineWidth = 50;
     const radius = ctx.lineWidth / 2;
     const area = radius * radius * Math.PI;
     const dots = Math.ceil(area / 30);
@@ -55,18 +67,15 @@ const Canvas = () => {
 
   return (
     <>
-      <canvas
+      <CanvasWrapper
         ref={canvasRef}
-        width={window.innerWidth}
-        height={window.innerHeight}
+        width='1400'
+        height='768'
         onMouseDown={onDown}
-        onPointerDown={onDown}
         onTouchStart={onDown}
         onMouseMove={onMove}
-        onPointerMove={onMove}
         onTouchMove={onMove}
         onMouseUp={onUp}
-        onPointerUp={onUp}
         onTouchEnd={onUp}
       />
     </>
