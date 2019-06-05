@@ -40,18 +40,28 @@ const Canvas = () => {
   };
 
   const onDown = e => {
-    let { offsetX, offsetY } = e.nativeEvent;
-    const rect = canvasRef.current.getBoundingClientRect();
-    const canvas = canvasRef.current;
-    offsetX = ((offsetX - rect.left) / (rect.right - rect.left)) * canvas.width;
-    offsetY = ((offsetY - rect.top) / (rect.bottom - rect.top)) * canvas.height;
-    setIsPainting(true);
-    setPosition({ offsetX, offsetY });
+    if (e.buttons === 1 || e.type === 'touchstart') {
+      let offsetX =
+        e.type === 'touchmove' ? e.touches[0].clientX : e.nativeEvent.offsetX;
+      let offsetY =
+        e.type === 'touchmove' ? e.touches[0].clientY : e.nativeEvent.offsetY;
+      const rect = canvasRef.current.getBoundingClientRect();
+      const canvas = canvasRef.current;
+      offsetX =
+        ((offsetX - rect.left) / (rect.right - rect.left)) * canvas.width;
+      offsetY =
+        ((offsetY - rect.top) / (rect.bottom - rect.top)) * canvas.height;
+      setIsPainting(true);
+      setPosition({ offsetX, offsetY });
+    }
   };
 
   const onMove = e => {
-    if (isPainting && e.buttons === 1) {
-      let { offsetX, offsetY } = e.nativeEvent;
+    if (isPainting && (e.buttons === 1 || e.type === 'touchmove')) {
+      let offsetX =
+        e.type === 'touchmove' ? e.touches[0].clientX : e.nativeEvent.offsetX;
+      let offsetY =
+        e.type === 'touchmove' ? e.touches[0].clientY : e.nativeEvent.offsetY;
       const rect = canvasRef.current.getBoundingClientRect();
       const canvas = canvasRef.current;
       offsetX =
@@ -99,7 +109,7 @@ const Canvas = () => {
     <>
       <CanvasWrapper
         ref={canvasRef}
-        width='1400'
+        width='1500'
         height='768'
         onMouseDown={onDown}
         onTouchStart={onDown}

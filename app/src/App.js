@@ -9,6 +9,7 @@ function App() {
     <>
       <Global />
       <Canvas />
+      <h1>Test</h1>
     </>
   );
 }
