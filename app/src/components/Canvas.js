@@ -8,6 +8,27 @@ const Canvas = () => {
 
   const reader = new FileReader();
 
+  useEffect(() => {
+    const getData = async () => {
+      const url = localStorage.getItem('blob');
+      const res = await fetch(url);
+      const blob = await res.blob();
+      const imageUrl = URL.createObjectURL(blob);
+      const ctx = canvasRef.current.getContext('2d');
+      const img = new Image();
+      img.addEventListener('load', () => {
+        ctx.drawImage(img, 0, 0);
+      });
+      img.src = imageUrl;
+      // const img = new Image();
+      // const ctx = canvasRef.current.getContext('2d');
+      // img.src = blob;
+      // console.log(res);
+      //
+    };
+    getData();
+  }, []);
+
   const randomPoint = radius => {
     for (;;) {
       const x = Math.random() * 2 - 1;
@@ -18,9 +39,12 @@ const Canvas = () => {
     }
   };
 
-  const onDown = ({ nativeEvent }) => {
-    console.log(nativeEvent);
-    const { offsetX, offsetY } = nativeEvent;
+  const onDown = e => {
+    let { offsetX, offsetY } = e.nativeEvent;
+    const rect = canvasRef.current.getBoundingClientRect();
+    const canvas = canvasRef.current;
+    offsetX = ((offsetX - rect.left) / (rect.right - rect.left)) * canvas.width;
+    offsetY = ((offsetY - rect.top) / (rect.bottom - rect.top)) * canvas.height;
     setIsPainting(true);
     setPosition({ offsetX, offsetY });
   };
