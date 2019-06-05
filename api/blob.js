@@ -18,6 +18,7 @@ const update = async blob => {
 
 router.post('/new', async (req, res) => {
   try {
+    console.log(req.body);
     await add(req.body);
     res.status(201).end();
   } catch (e) {
@@ -38,3 +39,5 @@ router.put('/update', async (req, res) => {
   const blob = await update(req.body);
   res.status(200).end();
 });
+
+module.exports = router;
