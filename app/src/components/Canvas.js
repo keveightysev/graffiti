@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-
 import CanvasWrapper from '../styles/Canvas';
 
 const Canvas = () => {
   const [isPainting, setIsPainting] = useState(false);
   const [position, setPosition] = useState({ offsetX: 0, offsetY: 0 });
   const canvasRef = useRef(null);
+
+  const reader = new FileReader();
 
   const randomPoint = radius => {
     for (;;) {
@@ -18,14 +19,15 @@ const Canvas = () => {
   };
 
   const onDown = ({ nativeEvent }) => {
+    console.log(nativeEvent);
     const { offsetX, offsetY } = nativeEvent;
     setIsPainting(true);
     setPosition({ offsetX, offsetY });
   };
 
-  const onMove = ({ nativeEvent }) => {
-    if (isPainting) {
-      let { offsetX, offsetY } = nativeEvent;
+  const onMove = e => {
+    if (isPainting && e.buttons === 1) {
+      let { offsetX, offsetY } = e.nativeEvent;
       const rect = canvasRef.current.getBoundingClientRect();
       const canvas = canvasRef.current;
       offsetX =
@@ -37,7 +39,12 @@ const Canvas = () => {
         offsetY,
       });
       spray(canvasRef.current);
-      //   canvasRef.current.toBlob(blob => console.log(blob), 'image/jpeg');
+      canvasRef.current.toBlob(blob => {
+        reader.onload = () => {
+          localStorage.setItem('blob', reader.result);
+        };
+        reader.readAsDataURL(blob);
+      }, 'image/png');
     }
   };
 
@@ -47,7 +54,7 @@ const Canvas = () => {
 
   const spray = canvas => {
     const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#000000';
+    ctx.fillStyle = '#00ff00';
     ctx.strokeStyle = '#000000';
     ctx.lineWidth = 50;
     const radius = ctx.lineWidth / 2;
