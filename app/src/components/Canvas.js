@@ -18,7 +18,6 @@ const Canvas = () => {
   };
 
   const onDown = ({ nativeEvent }) => {
-    console.log(nativeEvent);
     const { offsetX, offsetY } = nativeEvent;
     setIsPainting(true);
     setPosition({ offsetX, offsetY });
