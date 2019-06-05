@@ -1,5 +1,6 @@
 exports.up = function(knex) {
   return knex.schema.createTable('blob', table => {
+    table.increments();
     table.blob('blob');
   });
 };
