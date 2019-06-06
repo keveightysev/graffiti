@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Canvas from './components/Canvas';
+import Controls from './components/Controls';
 
 import { Global } from './styles/Global';
 
@@ -9,7 +10,7 @@ function App() {
     <>
       <Global />
       <Canvas />
-      <h1>Test</h1>
+      <Controls />
     </>
   );
 }
