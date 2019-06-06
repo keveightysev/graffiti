@@ -1,7 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
+
+import { GraffitiContext } from '../context';
+
 import CanvasWrapper from '../styles/Canvas';
 
 const Canvas = () => {
+  const { state } = useContext(GraffitiContext);
   const [isPainting, setIsPainting] = useState(false);
   const [position, setPosition] = useState({ offsetX: 0, offsetY: 0 });
   const canvasRef = useRef(null);
@@ -20,11 +24,6 @@ const Canvas = () => {
         ctx.drawImage(img, 0, 0);
       });
       img.src = imageUrl;
-      // const img = new Image();
-      // const ctx = canvasRef.current.getContext('2d');
-      // img.src = blob;
-      // console.log(res);
-      //
     };
     getData();
   }, []);
@@ -88,7 +87,7 @@ const Canvas = () => {
 
   const spray = canvas => {
     const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#00ff00';
+    ctx.fillStyle = state.color;
     ctx.strokeStyle = '#000000';
     ctx.lineWidth = 50;
     const radius = ctx.lineWidth / 2;
