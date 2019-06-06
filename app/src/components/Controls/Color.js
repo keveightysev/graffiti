@@ -2,11 +2,13 @@ import React, { useContext } from 'react';
 
 import { GraffitiContext } from '../../context';
 
+import { ColorInput } from '../../styles/Controls';
+
 const Color = () => {
   const { state, dispatch } = useContext(GraffitiContext);
 
   return (
-    <input
+    <ColorInput
       type='color'
       value={state.color}
       onChange={e =>
