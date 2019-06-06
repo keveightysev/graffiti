@@ -111,6 +111,7 @@ const Canvas = () => {
         ref={canvasRef}
         width='1500'
         height='768'
+        touch-action='none'
         onMouseDown={onDown}
         onTouchStart={onDown}
         onMouseMove={onMove}
