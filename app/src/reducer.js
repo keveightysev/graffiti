@@ -1,5 +1,6 @@
 export const initialState = {
   color: '#000000',
+  size: 50,
 };
 
 export const reducer = (state = initialState, action) => {
