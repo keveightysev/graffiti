@@ -1,18 +1,16 @@
 require('dotenv').config();
-const port = process.env.PORT || 80;
-
-const io = require('socket.io')(port);
+const app = require('express')();
+const helmet = require('helmet');
+const cors = require('cors');
+const http = require('http').createServer(app);
 const fs = require('fs');
 
-io.origins((origin, callback) => {
-  if (
-    origin !== 'https://graffiti-wall.netlify.com/' ||
-    origin !== 'http://localhost:3000/'
-  ) {
-    return callback('origin not allowed', false);
-  }
-  callback(null, true);
-});
+app.use(helmet());
+app.use(cors());
+
+const io = require('socket.io')(http);
+
+const port = process.env.PORT || 80;
 
 io.on('connection', socket => {
   socket.setMaxListeners(10000);
@@ -42,4 +40,8 @@ io.on('connection', socket => {
     const save = JSON.stringify(data);
     fs.writeFileSync('wall.json', save);
   });
+});
+
+app.listen(port, () => {
+  console.log(`\n*** Server listening on port ${port} ***\n`);
 });
