@@ -1,12 +1,9 @@
 require('dotenv').config();
 const app = require('express')();
-const helmet = require('helmet');
 const cors = require('cors');
+app.use(cors());
 const http = require('http').createServer(app);
 const fs = require('fs');
-
-app.use(helmet());
-app.use(cors());
 
 const io = require('socket.io')(http);
 
