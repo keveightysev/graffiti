@@ -1,8 +1,10 @@
 require('dotenv').config();
 const port = process.env.PORT || 80;
 
-const io = require('socket.io')(port, {});
+const io = require('socket.io')(port);
 const fs = require('fs');
+
+io.origins('*:*');
 
 io.on('connection', socket => {
   socket.setMaxListeners(10000);
