@@ -4,7 +4,15 @@ const port = process.env.PORT || 80;
 const io = require('socket.io')(port);
 const fs = require('fs');
 
-io.origins('*:*');
+io.origins((origin, callback) => {
+  if (
+    origin !== 'https://graffiti-wall.netlify.com/' ||
+    origin !== 'http://localhost:3000/'
+  ) {
+    return callback('origin not allowed', false);
+  }
+  callback(null, true);
+});
 
 io.on('connection', socket => {
   socket.setMaxListeners(10000);
