@@ -5,13 +5,13 @@ import { GraffitiContext } from '../context';
 
 import CanvasWrapper from '../styles/Canvas';
 
+const socket = io('http://localhost');
+
 const Canvas = () => {
   const { state } = useContext(GraffitiContext);
   const [isPainting, setIsPainting] = useState(false);
   const [position, setPosition] = useState({ offsetX: 0, offsetY: 0 });
   const canvasRef = useRef(null);
-
-  const socket = io.connect('http://localhost:4000');
 
   socket.on('another spray', data => {
     const ctx = canvasRef.current.getContext('2d');
@@ -26,6 +26,15 @@ const Canvas = () => {
       data.width,
       data.width,
     );
+  });
+
+  socket.on('fresh', data => {
+    const img = new Image();
+    const ctx = canvasRef.current.getContext('2d');
+    img.addEventListener('load', () => {
+      ctx.drawImage(img, 0, 0);
+    });
+    img.src = data.img;
   });
 
   const randomPoint = radius => {
@@ -77,6 +86,8 @@ const Canvas = () => {
 
   const onUp = () => {
     setIsPainting(false);
+    const imgData = canvasRef.current.toDataURL();
+    socket.emit('save', { imgData });
   };
 
   const spray = canvas => {
