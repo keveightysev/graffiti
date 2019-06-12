@@ -12,6 +12,10 @@ const io = require('socket.io')(http);
 
 const port = process.env.PORT || 80;
 
+http.listen(port, () => {
+  console.log(`\n*** Server listening on port ${port} ***\n`);
+});
+
 io.on('connection', socket => {
   socket.setMaxListeners(10000);
 
@@ -40,8 +44,4 @@ io.on('connection', socket => {
     const save = JSON.stringify(data);
     fs.writeFileSync('wall.json', save);
   });
-});
-
-app.listen(port, () => {
-  console.log(`\n*** Server listening on port ${port} ***\n`);
 });
