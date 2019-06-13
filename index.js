@@ -1,8 +1,14 @@
-require('dotenv').config();
-const port = process.env.PORT || 80;
-
-const io = require('socket.io')(port, {});
+const app = require('express')();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 const fs = require('fs');
+
+app.get('/', (req, res) => {
+  res.send(`
+    <h1>This is my server</h1>
+    <h2>There are others like it, but this one is mine</h2>
+  `);
+});
 
 io.on('connection', socket => {
   socket.setMaxListeners(10000);
@@ -32,4 +38,8 @@ io.on('connection', socket => {
     const save = JSON.stringify(data);
     fs.writeFileSync('wall.json', save);
   });
+});
+
+http.listen(80, () => {
+  console.log('\n*** Server listening on port 80 ***\n');
 });

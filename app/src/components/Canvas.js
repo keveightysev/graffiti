@@ -5,7 +5,7 @@ import { GraffitiContext } from '../context';
 
 import CanvasWrapper from '../styles/Canvas';
 
-const socket = io('http://localhost');
+const socket = io('https://deserted-side.glitch.me/server.js');
 
 const Canvas = () => {
   const { state } = useContext(GraffitiContext);
@@ -29,6 +29,7 @@ const Canvas = () => {
   });
 
   socket.on('fresh', data => {
+    console.log('connected');
     const img = new Image();
     const ctx = canvasRef.current.getContext('2d');
     img.addEventListener('load', () => {

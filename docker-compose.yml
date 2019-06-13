@@ -1,0 +1,14 @@
+version: '3'
+services:
+  www:
+    env_file:
+      - /opt/app/.env
+
+    volumes:
+      - .:/opt/app/
+    ports:
+      - '80:80'
+    build:
+      context: .
+
+
