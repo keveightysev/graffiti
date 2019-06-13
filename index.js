@@ -1,17 +1,8 @@
-const express = require('express'),
-  cors = require('cors'),
-  server = express()
-    .use(cors())
-    .use(express.json()),
-  app = require('http').createServer(server),
-  io = require('socket.io')(app, {
-    path: '/spray',
-    transports: ['polling'],
-  });
+require('dotenv').config();
+const port = process.env.PORT || 80;
 
-const port = process.env.PORT || 4500;
-
-server.listen(port);
+const io = require('socket.io')(port, {});
+const fs = require('fs');
 
 io.on('connection', socket => {
   socket.setMaxListeners(10000);

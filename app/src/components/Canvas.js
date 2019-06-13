@@ -5,7 +5,7 @@ import { GraffitiContext } from '../context';
 
 import CanvasWrapper from '../styles/Canvas';
 
-const socket = io('https://graffiti-wall.herokuapp.com:80/');
+const socket = io('http://localhost');
 
 const Canvas = () => {
   const { state } = useContext(GraffitiContext);
