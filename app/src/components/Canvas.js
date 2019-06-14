@@ -5,7 +5,7 @@ import { GraffitiContext } from '../context';
 
 import CanvasWrapper from '../styles/Canvas';
 
-const socket = io('http://graffiti.openode.io/');
+const socket = io('https://graffiti.openode.io/');
 
 const Canvas = () => {
   const { state } = useContext(GraffitiContext);
