@@ -40,6 +40,6 @@ io.on('connection', socket => {
   });
 });
 
-http.listen(80, () => {
-  console.log('\n*** Server listening on port 80 ***\n');
-});
+const port = process.env.PORT || 80;
+
+http.listen(port, () => console.log('*** Server listening ***'));
