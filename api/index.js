@@ -17,13 +17,14 @@ io.on('connection', socket => {
 
   socket.on('disconnect', reason => console.log(reason));
 
-  const startImg = fs.readFileSync('wall.json');
-  const data = JSON.parse(startImg);
+  const imgStream = fs.createWriteStream('wall.png');
 
-  socket.emit('fresh', { img: data.imgData });
+  const startImg = fs.readFileSync('wall.png');
+
+  socket.emit('fresh', { img: startImg });
 
   socket.on('spray', data => {
-    socket.on('error', err => console.log(err));
+    socket.on('err', err => console.log(err));
     socket.broadcast.emit('another spray', {
       imgArr: data.imgArr,
       x: data.x,
@@ -35,8 +36,7 @@ io.on('connection', socket => {
   });
 
   socket.on('save', data => {
-    const save = JSON.stringify(data);
-    fs.writeFileSync('wall.json', save);
+    imgStream.write(data.blob);
   });
 });
 

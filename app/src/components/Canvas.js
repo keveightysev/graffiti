@@ -5,7 +5,7 @@ import { GraffitiContext } from '../context';
 
 import CanvasWrapper from '../styles/Canvas';
 
-const socket = io('https://graffiti.openode.io/');
+const socket = io('http://localhost');
 
 const Canvas = () => {
   const { state } = useContext(GraffitiContext);
@@ -14,22 +14,24 @@ const Canvas = () => {
   const canvasRef = useRef(null);
 
   socket.on('another spray', data => {
-    const ctx = canvasRef.current.getContext('2d');
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
     const imgArr = new Uint8ClampedArray(data.imgArr);
     const imgData = new ImageData(imgArr, data.width);
+    const rect = canvasRef.current.getBoundingClientRect();
+    ctx.globalCompositeOperation = 'destination-over';
     ctx.putImageData(
       imgData,
-      data.x,
-      data.y,
-      data.dirtyX,
-      data.dirtyY,
-      data.width,
-      data.width,
+      ((data.x - rect.left) / (rect.right - rect.left)) * canvas.width,
+      ((data.y - rect.top) / (rect.bottom - rect.top)) * canvas.height,
+      // data.dirtyX,
+      // data.dirtyY,
+      // data.width,
+      // data.width,
     );
   });
 
   socket.on('fresh', data => {
-    console.log('connected');
     const img = new Image();
     const ctx = canvasRef.current.getContext('2d');
     img.addEventListener('load', () => {
@@ -49,37 +51,44 @@ const Canvas = () => {
   };
 
   const onDown = e => {
+    e = e || window.event;
     if (e.buttons === 1 || e.type === 'touchstart') {
+      const touch = e.touches[0] || e.changedTouches[0];
       let offsetX =
-        e.type === 'touchmove' ? e.touches[0].clientX : e.nativeEvent.offsetX;
+        e.type === 'touchmove' ? touch.clientX : e.nativeEvent.offsetX;
       let offsetY =
-        e.type === 'touchmove' ? e.touches[0].clientY : e.nativeEvent.offsetY;
+        e.type === 'touchmove' ? touch.clientY : e.nativeEvent.offsetY;
       const rect = canvasRef.current.getBoundingClientRect();
       const canvas = canvasRef.current;
-      offsetX =
+      const updateX =
         ((offsetX - rect.left) / (rect.right - rect.left)) * canvas.width;
-      offsetY =
+      const updateY =
         ((offsetY - rect.top) / (rect.bottom - rect.top)) * canvas.height;
       setIsPainting(true);
-      setPosition({ offsetX, offsetY });
+      setPosition({
+        offsetX: updateX || 0,
+        offsetY: updateY || 0,
+      });
     }
   };
 
   const onMove = e => {
-    if ((isPainting && e.buttons === 1) || e.type === 'touchmove') {
-      let offsetX =
-        e.type === 'touchmove' ? e.touches[0].clientX : e.nativeEvent.offsetX;
-      let offsetY =
-        e.type === 'touchmove' ? e.touches[0].clientY : e.nativeEvent.offsetY;
+    e.persist();
+    if (isPainting && (e.buttons === 1 || e.type === 'touchmove')) {
+      const touch = e.touches[0] || e.changedTouches[0];
+      const offsetX =
+        e.type === 'touchmove' ? touch.clientX : e.nativeEvent.offsetX;
+      const offsetY =
+        e.type === 'touchmove' ? touch.clientY : e.nativeEvent.offsetY;
       const rect = canvasRef.current.getBoundingClientRect();
       const canvas = canvasRef.current;
-      offsetX =
+      const updateX =
         ((offsetX - rect.left) / (rect.right - rect.left)) * canvas.width;
-      offsetY =
+      const updateY =
         ((offsetY - rect.top) / (rect.bottom - rect.top)) * canvas.height;
       setPosition({
-        offsetX,
-        offsetY,
+        offsetX: updateX,
+        offsetY: updateY,
       });
       spray(canvasRef.current);
     }
@@ -87,8 +96,9 @@ const Canvas = () => {
 
   const onUp = () => {
     setIsPainting(false);
-    const imgData = canvasRef.current.toDataURL();
-    socket.emit('save', { imgData });
+    canvasRef.current.toBlob(blob => {
+      socket.emit('save', { blob });
+    });
   };
 
   const spray = canvas => {
@@ -97,6 +107,7 @@ const Canvas = () => {
     const radius = state.size / 2;
     const area = radius * radius * Math.PI;
     const dots = Math.ceil(area / 30);
+    ctx.globalCompositeOperation = 'source-over';
     for (let i = 0; i < dots; i++) {
       const offset = randomPoint(radius);
       ctx.fillRect(
