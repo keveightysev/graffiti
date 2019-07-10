@@ -6,21 +6,18 @@ import { GraffitiContext } from '../context';
 import CanvasWrapper from '../styles/Canvas';
 
 const Canvas = () => {
-  const { state } = useContext(GraffitiContext);
+  const { state, dispatch } = useContext(GraffitiContext);
   const [isPainting, setIsPainting] = useState(false);
   const [position, setPosition] = useState({ offsetX: 0, offsetY: 0 });
   const canvasRef = useRef(null);
 
   useEffect(() => {
-    const ctx = canvasRef.current.getContext('2d');
-    const img = new Image();
-    img.src = background;
-    img.onload = () => {
-      const pattern = ctx.createPattern(img, 'repeat');
-      ctx.fillStyle = pattern;
-      ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-    };
-  }, []);
+    clearCanvas();
+    dispatch({
+      type: 'SET_FUNCTIONS',
+      payload: { clear: clearCanvas },
+    });
+  }, [dispatch]);
 
   const randomPoint = radius => {
     for (;;) {
@@ -98,6 +95,17 @@ const Canvas = () => {
         1,
       );
     }
+  };
+
+  const clearCanvas = () => {
+    const ctx = canvasRef.current.getContext('2d');
+    const img = new Image();
+    img.src = background;
+    img.onload = () => {
+      const pattern = ctx.createPattern(img, 'repeat');
+      ctx.fillStyle = pattern;
+      ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    };
   };
 
   return (
