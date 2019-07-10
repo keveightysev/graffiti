@@ -1,5 +1,5 @@
 export const initialState = {
-  color: '#000000',
+  color: '#057569',
   size: 50,
 };
 

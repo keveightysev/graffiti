@@ -12,13 +12,14 @@ const Canvas = () => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
-    console.log(background);
     const ctx = canvasRef.current.getContext('2d');
     const img = new Image();
     img.src = background;
-    const pattern = ctx.createPattern(img, 'repeat');
-    ctx.fillStyle = pattern;
-    ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    img.onload = () => {
+      const pattern = ctx.createPattern(img, 'repeat');
+      ctx.fillStyle = pattern;
+      ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    };
   }, []);
 
   const randomPoint = radius => {
