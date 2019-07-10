@@ -1,4 +1,5 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
+import background from '../assets/brickwall.jpg';
 
 import { GraffitiContext } from '../context';
 
@@ -9,6 +10,16 @@ const Canvas = () => {
   const [isPainting, setIsPainting] = useState(false);
   const [position, setPosition] = useState({ offsetX: 0, offsetY: 0 });
   const canvasRef = useRef(null);
+
+  useEffect(() => {
+    console.log(background);
+    const ctx = canvasRef.current.getContext('2d');
+    const img = new Image();
+    img.src = background;
+    const pattern = ctx.createPattern(img, 'repeat');
+    ctx.fillStyle = pattern;
+    ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+  }, []);
 
   const randomPoint = radius => {
     for (;;) {
@@ -86,20 +97,14 @@ const Canvas = () => {
         1,
       );
     }
-    const data = ctx.getImageData(
-      position.offsetX - radius,
-      position.offsetY + radius,
-      state.size,
-      state.size,
-    );
   };
 
   return (
     <>
       <CanvasWrapper
         ref={canvasRef}
-        width='1500'
-        height='768'
+        width={window.innerWidth}
+        height={window.innerHeight}
         touch-action='none'
         onMouseDown={onDown}
         onTouchStart={onDown}
