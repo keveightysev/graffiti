@@ -11,14 +11,8 @@ const Color = () => {
   const { state, dispatch } = useContext(GraffitiContext);
 
   return (
-    // <ColorInput
-    //   type='color'
-    //   value={state.color}
-    //   onChange={e =>
-    //     dispatch({ type: 'CHANGE_COLOR', payload: e.target.value })
-    //   }
-    // />
     <ColorPicker>
+      <h2>Choose Color</h2>
       <CurrentColor color={state.color} onClick={() => setClicked(!clicked)} />
       <Sketch
         color={state.color}
@@ -38,7 +32,6 @@ const CurrentColor = styled.div`
   height: 75px;
   background: ${({ color }) => color};
   border-radius: 50%;
-  margin: 20px 0 0 20px;
   border: 2px solid white;
   cursor: pointer;
   z-index: 2;
@@ -47,7 +40,8 @@ const CurrentColor = styled.div`
 const Sketch = styled(SketchPicker)`
   margin: 10px 0 0 20px;
   position: absolute;
-  top: 95px;
+  top: 105px;
+  left: 20px;
   display: ${({ clicked }) => (clicked ? 'block' : 'none')};
 `;
 
@@ -55,6 +49,17 @@ const ColorPicker = styled.div`
   position: relative;
   display: flex;
   z-index: 3;
+  flex-direction: column;
+  margin: 20px 0 0 20px;
+  align-items: center;
+
+  h2 {
+    color: white;
+    font-family: 'Permanent Marker', cursive;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    user-select: none;
+  }
 `;
 
 const Cover = styled.div`
