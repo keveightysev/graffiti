@@ -1,44 +1,14 @@
 import React, { useState, useRef, useContext } from 'react';
-import io from 'socket.io-client';
 
 import { GraffitiContext } from '../context';
 
 import CanvasWrapper from '../styles/Canvas';
-
-const socket = io('http://localhost');
 
 const Canvas = () => {
   const { state } = useContext(GraffitiContext);
   const [isPainting, setIsPainting] = useState(false);
   const [position, setPosition] = useState({ offsetX: 0, offsetY: 0 });
   const canvasRef = useRef(null);
-
-  socket.on('another spray', data => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    const imgArr = new Uint8ClampedArray(data.imgArr);
-    const imgData = new ImageData(imgArr, data.width);
-    const rect = canvasRef.current.getBoundingClientRect();
-    ctx.globalCompositeOperation = 'destination-over';
-    ctx.putImageData(
-      imgData,
-      ((data.x - rect.left) / (rect.right - rect.left)) * canvas.width,
-      ((data.y - rect.top) / (rect.bottom - rect.top)) * canvas.height,
-      // data.dirtyX,
-      // data.dirtyY,
-      // data.width,
-      // data.width,
-    );
-  });
-
-  socket.on('fresh', data => {
-    const img = new Image();
-    const ctx = canvasRef.current.getContext('2d');
-    img.addEventListener('load', () => {
-      ctx.drawImage(img, 0, 0);
-    });
-    img.src = data.img;
-  });
 
   const randomPoint = radius => {
     for (;;) {
@@ -53,17 +23,18 @@ const Canvas = () => {
   const onDown = e => {
     e = e || window.event;
     if (e.buttons === 1 || e.type === 'touchstart') {
-      const touch = e.touches[0] || e.changedTouches[0];
       let offsetX =
-        e.type === 'touchmove' ? touch.clientX : e.nativeEvent.offsetX;
+        e.type === 'touchmove' ? e.touches[0].clientX : e.nativeEvent.offsetX;
       let offsetY =
-        e.type === 'touchmove' ? touch.clientY : e.nativeEvent.offsetY;
+        e.type === 'touchmove' ? e.touches[0].clientY : e.nativeEvent.offsetY;
       const rect = canvasRef.current.getBoundingClientRect();
       const canvas = canvasRef.current;
       const updateX =
-        ((offsetX - rect.left) / (rect.right - rect.left)) * canvas.width;
+        ((offsetX - rect.left + window.pageXOffset) / rect.width) *
+        canvas.width;
       const updateY =
-        ((offsetY - rect.top) / (rect.bottom - rect.top)) * canvas.height;
+        ((offsetY - rect.top + window.pageYOffset) / rect.height) *
+        canvas.height;
       setIsPainting(true);
       setPosition({
         offsetX: updateX || 0,
@@ -75,17 +46,18 @@ const Canvas = () => {
   const onMove = e => {
     e.persist();
     if (isPainting && (e.buttons === 1 || e.type === 'touchmove')) {
-      const touch = e.touches[0] || e.changedTouches[0];
       const offsetX =
-        e.type === 'touchmove' ? touch.clientX : e.nativeEvent.offsetX;
+        e.type === 'touchmove' ? e.touches[0].clientX : e.nativeEvent.offsetX;
       const offsetY =
-        e.type === 'touchmove' ? touch.clientY : e.nativeEvent.offsetY;
+        e.type === 'touchmove' ? e.touches[0].clientY : e.nativeEvent.offsetY;
       const rect = canvasRef.current.getBoundingClientRect();
       const canvas = canvasRef.current;
       const updateX =
-        ((offsetX - rect.left) / (rect.right - rect.left)) * canvas.width;
+        ((offsetX - rect.left + window.pageXOffset) / rect.width) *
+        canvas.width;
       const updateY =
-        ((offsetY - rect.top) / (rect.bottom - rect.top)) * canvas.height;
+        ((offsetY - rect.top + window.pageYOffset) / rect.height) *
+        canvas.height;
       setPosition({
         offsetX: updateX,
         offsetY: updateY,
@@ -96,9 +68,6 @@ const Canvas = () => {
 
   const onUp = () => {
     setIsPainting(false);
-    canvasRef.current.toBlob(blob => {
-      socket.emit('save', { blob });
-    });
   };
 
   const spray = canvas => {
@@ -123,15 +92,6 @@ const Canvas = () => {
       state.size,
       state.size,
     );
-    const imgArr = Array.from(data.data);
-    socket.emit('spray', {
-      imgArr,
-      x: position.offsetX,
-      y: position.offsetY,
-      width: state.size,
-      dirtyX: position.offsetX - radius,
-      dirtyY: position.offsetY + radius,
-    });
   };
 
   return (
