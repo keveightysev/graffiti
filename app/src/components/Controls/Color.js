@@ -4,8 +4,6 @@ import styled from 'styled-components';
 
 import { GraffitiContext } from '../../context';
 
-import { ColorInput } from '../../styles/Controls';
-
 const Color = () => {
   const [clicked, setClicked] = useState(false);
   const { state, dispatch } = useContext(GraffitiContext);
