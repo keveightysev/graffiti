@@ -1,4 +1,5 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
+import styled from 'styled-components';
 // import short from 'short-uuid';
 // import moment from 'moment';
 import { saveAs } from 'file-saver';
@@ -12,8 +13,10 @@ import CanvasWrapper from '../styles/Canvas';
 const Canvas = () => {
   const { state, dispatch } = useContext(GraffitiContext);
   const [isPainting, setIsPainting] = useState(false);
+  const [clicked, setClicked] = useState(false);
   const [position, setPosition] = useState({ offsetX: 0, offsetY: 0 });
   const canvasRef = useRef(null);
+  const instructRef = useRef(null);
 
   useEffect(() => {
     clearCanvas();
@@ -59,6 +62,9 @@ const Canvas = () => {
   const onMove = e => {
     e.persist();
     if (isPainting && (e.buttons === 1 || e.type === 'touchmove')) {
+      if (!clicked) {
+        fadeOut();
+      }
       const offsetX =
         e.type === 'touchmove' ? e.touches[0].clientX : e.nativeEvent.offsetX;
       const offsetY =
@@ -164,6 +170,19 @@ const Canvas = () => {
     });
   };
 
+  const fadeOut = () => {
+    const element = instructRef.current;
+    element.style.opacity = 1;
+    (function fade() {
+      if ((element.style.opacity -= 0.1) < 0) {
+        element.style.display = 'none';
+        setClicked(true);
+      } else {
+        requestAnimationFrame(fade);
+      }
+    })();
+  };
+
   return (
     <>
       <CanvasWrapper
@@ -178,8 +197,37 @@ const Canvas = () => {
         onMouseUp={onUp}
         onTouchEnd={onUp}
       />
+      <Instruct
+        ref={instructRef}
+        onMouseDown={onDown}
+        onTouchStart={onDown}
+        onMouseUp={onUp}
+        onTouchEnd={onUp}
+        onClick={fadeOut}
+      >
+        {window.innerWidth > 500 ? 'Click' : 'Touch'} anywhere and drag{' '}
+        {window.innerWidth > 500 ? 'your mouse' : 'your finger'} to begin
+        painting!
+      </Instruct>
     </>
   );
 };
 
 export default Canvas;
+
+const Instruct = styled.h2`
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 3rem;
+  text-align: center;
+  color: white;
+  font-family: 'Permanent Marker', cursive;
+  user-select: none;
+
+  @media (max-width: 450px) {
+    font-size: 1.8rem;
+    top: 200px;
+  }
+`;
