@@ -51,6 +51,10 @@ const ColorPicker = styled.div`
   margin: 20px 0 0 20px;
   align-items: center;
 
+  @media (max-width: 450px) {
+    margin-left: 0;
+  }
+
   h2 {
     color: white;
     font-family: 'Permanent Marker', cursive;

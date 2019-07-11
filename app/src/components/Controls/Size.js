@@ -26,7 +26,8 @@ const Size = () => {
     const area = radius * radius * Math.PI;
     const dots = Math.ceil(area);
     const { left } = sizeRef.current.getBoundingClientRect();
-    const center = left + 30 / 2;
+    const centerOffset = window.innerWidth > 450 ? 30 : 55;
+    const center = left + centerOffset / 2;
     for (let i = 0; i < dots; i++) {
       const offset = randomPoint(radius);
       ctx.fillRect(center + offset.x, center + offset.y, 1, 1);
@@ -67,6 +68,10 @@ const SizePicker = styled.div`
     font-size: 1.2rem;
     margin-bottom: 10px;
     user-select: none;
+  }
+
+  @media (max-width: 450px) {
+    margin-left: 0;
   }
 `;
 

@@ -27,4 +27,11 @@ const SaveText = styled.h2`
   &:hover {
     color: ${({ color }) => color};
   }
+  @media (max-width: 450px) {
+    margin-left: 0;
+  }
+
+  @media (max-width: 450px) {
+    margin-left: 0;
+  }
 `;
