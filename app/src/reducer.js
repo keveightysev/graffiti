@@ -2,6 +2,7 @@ export const initialState = {
   color: '#057569',
   size: 50,
   clear: null,
+  save: null,
 };
 
 export const reducer = (state = initialState, action) => {
@@ -11,7 +12,7 @@ export const reducer = (state = initialState, action) => {
     case 'CHANGE_SIZE':
       return { ...state, size: Number(action.payload) };
     case 'SET_FUNCTIONS':
-      return { ...state, clear: action.payload.clear };
+      return { ...state, ...action.payload };
     default:
       return state;
   }

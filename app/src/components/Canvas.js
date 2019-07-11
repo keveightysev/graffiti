@@ -1,7 +1,11 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
+// import short from 'short-uuid';
+// import moment from 'moment';
+import { saveAs } from 'file-saver';
 import background from '../assets/brickwall.jpg';
 
 import { GraffitiContext } from '../context';
+// import { storage } from '../firebase';
 
 import CanvasWrapper from '../styles/Canvas';
 
@@ -15,7 +19,7 @@ const Canvas = () => {
     clearCanvas();
     dispatch({
       type: 'SET_FUNCTIONS',
-      payload: { clear: clearCanvas },
+      payload: { clear: clearCanvas, save: saveCanvas },
     });
   }, [dispatch]);
 
@@ -106,6 +110,58 @@ const Canvas = () => {
       ctx.fillStyle = pattern;
       ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
     };
+  };
+
+  const saveCanvas = () => {
+    canvasRef.current.toBlob(blob => {
+      const reader = new FileReader();
+      reader.onload = readEvent => {
+        const img = new Image();
+        img.onload = imageEvent => {
+          let canvas = document.createElement('canvas'),
+            maxSize = 1000,
+            width = img.width,
+            height = img.height;
+
+          if (width > height && width > maxSize) {
+            height *= maxSize / width;
+            width = maxSize;
+          } else if (height > width && height > maxSize) {
+            width *= maxSize / height;
+            height = maxSize;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+
+          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+          canvas.toBlob(newBlob => {
+            saveAs(newBlob, 'graffiti-wall.png');
+            // const imageRef = storage.child(
+            //   `${moment().format('MMMDDYYYY')}/${short.generate()}.png`,
+            // );
+            // const upload = imageRef.put(newBlob, { contentType: 'image/png' });
+            // upload.on(
+            //   'state_changed',
+            //   snap => {
+            //     const progress =
+            //       (snap.bytesTransferred / snap.totalBytes) * 100;
+            //     console.log(`Upload is ${progress}% completed`);
+            //   },
+            //   err => {
+            //     console.log(err);
+            //   },
+            //   async () => {
+            //     const imgUrl = await upload.snapshot.ref.getDownloadURL();
+            //     console.log(imgUrl);
+            //   },
+            // );
+          });
+        };
+        img.src = readEvent.target.result;
+      };
+      reader.readAsDataURL(blob);
+    });
   };
 
   return (
