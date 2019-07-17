@@ -1,8 +1,10 @@
 export const initialState = {
-  color: '#057569',
+  color: '#FC00FF',
   size: 50,
   clear: null,
   save: null,
+  width: window.innerWidth,
+  height: window.innerHeight,
 };
 
 export const reducer = (state = initialState, action) => {

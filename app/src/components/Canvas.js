@@ -187,8 +187,8 @@ const Canvas = () => {
     <>
       <CanvasWrapper
         ref={canvasRef}
-        width={window.innerWidth}
-        height={window.innerHeight}
+        width={state.width}
+        height={state.height}
         touch-action='none'
         onMouseDown={onDown}
         onTouchStart={onDown}
@@ -205,9 +205,8 @@ const Canvas = () => {
         onTouchEnd={onUp}
         onClick={fadeOut}
       >
-        {window.innerWidth > 500 ? 'Click' : 'Touch'} anywhere and drag{' '}
-        {window.innerWidth > 500 ? 'your mouse' : 'your finger'} to begin
-        painting!
+        {state.width > 500 ? 'Click' : 'Touch'} anywhere and drag{' '}
+        {state.height > 500 ? 'your mouse' : 'your finger'} to begin painting!
       </Instruct>
     </>
   );
