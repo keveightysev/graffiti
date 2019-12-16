@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
-import { GraffitiContext } from '../../context';
+import { useGraffitiState } from "../../contexts";
 
 const Clear = () => {
-  const { state } = useContext(GraffitiContext);
+  const state = useGraffitiState();
   return (
     <ClearText onClick={state.clear} color={state.color}>
       Clear Wall
@@ -16,7 +16,7 @@ export default Clear;
 
 const ClearText = styled.h2`
   color: white;
-  font-family: 'Permanent Marker', cursive;
+  font-family: "Permanent Marker", cursive;
   font-size: 1.2rem;
   margin-bottom: 10px;
   user-select: none;

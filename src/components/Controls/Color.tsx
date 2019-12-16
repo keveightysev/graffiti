@@ -1,12 +1,13 @@
-import React, { useContext, useState } from 'react';
-import { SketchPicker } from 'react-color';
-import styled from 'styled-components';
+import React, { useState } from "react";
+import { SketchPicker } from "react-color";
+import styled from "styled-components";
 
-import { GraffitiContext } from '../../context';
+import { useGraffitiState, useGraffitiDispatch } from "../../contexts";
 
 const Color = () => {
   const [clicked, setClicked] = useState(false);
-  const { state, dispatch } = useContext(GraffitiContext);
+  const state = useGraffitiState();
+  const dispatch = useGraffitiDispatch();
 
   return (
     <ColorPicker>
@@ -16,7 +17,7 @@ const Color = () => {
         color={state.color}
         disableAlpha
         clicked={clicked}
-        onChange={({ hex }) => dispatch({ type: 'CHANGE_COLOR', payload: hex })}
+        onChange={({ hex }) => dispatch({ type: "CHANGE_COLOR", payload: hex })}
       />
       <Cover clicked={clicked} onMouseDown={() => setClicked(false)} />
     </ColorPicker>
@@ -24,6 +25,8 @@ const Color = () => {
 };
 
 export default Color;
+
+type ClickedProps = { clicked: boolean };
 
 const CurrentColor = styled.div`
   width: 75px;
@@ -35,12 +38,13 @@ const CurrentColor = styled.div`
   z-index: 2;
 `;
 
-const Sketch = styled(SketchPicker)`
+const Sketch = styled(SketchPicker)<ClickedProps>`
   margin: 10px 0 0 20px;
   position: absolute;
   top: 105px;
   left: 20px;
-  display: ${({ clicked }) => (clicked ? 'block' : 'none')};
+  display: ${({ clicked }: { clicked: boolean }) =>
+    clicked ? "block" : "none"};
 `;
 
 const ColorPicker = styled.div`
@@ -57,17 +61,18 @@ const ColorPicker = styled.div`
 
   h2 {
     color: white;
-    font-family: 'Permanent Marker', cursive;
+    font-family: "Permanent Marker", cursive;
     font-size: 1.2rem;
     margin-bottom: 10px;
     user-select: none;
   }
 `;
 
-const Cover = styled.div`
+const Cover = styled.div<ClickedProps>`
   position: absolute;
   z-index: -1;
   width: ${window.innerWidth}px;
   height: ${window.innerHeight}px;
-  display: ${({ clicked }) => (clicked ? 'block' : 'none')};
+  display: ${({ clicked }: { clicked: boolean }) =>
+    clicked ? "block" : "none"};
 `;

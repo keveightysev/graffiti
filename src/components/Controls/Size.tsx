@@ -1,14 +1,15 @@
-import React, { useContext, useRef, useEffect, useState } from 'react';
-import styled from 'styled-components';
+import React, { useRef, useEffect, useState, ChangeEvent } from "react";
+import styled from "styled-components";
 
-import { GraffitiContext } from '../../context';
+import { useGraffitiState, useGraffitiDispatch } from "../../contexts";
 
 const Size = () => {
-  const { state, dispatch } = useContext(GraffitiContext);
-  const sizeRef = useRef(null);
+  const state = useGraffitiState();
+  const dispatch = useGraffitiDispatch();
+  const sizeRef = useRef(document.createElement("canvas"));
   const [size, setSize] = useState(state.size);
 
-  const randomPoint = radius => {
+  const randomPoint = (radius: number) => {
     for (;;) {
       const x = Math.random() * 2 - 1;
       const y = Math.random() * 2 - 1;
@@ -19,9 +20,9 @@ const Size = () => {
   };
 
   useEffect(() => {
-    const ctx = sizeRef.current.getContext('2d');
-    ctx.fillStyle = 'white';
-    ctx.clearRect(0, 0, 105, 105);
+    const ctx = sizeRef.current.getContext("2d");
+    ctx!.fillStyle = "white";
+    ctx!.clearRect(0, 0, 105, 105);
     const radius = size / 2;
     const area = radius * radius * Math.PI;
     const dots = Math.ceil(area);
@@ -30,23 +31,23 @@ const Size = () => {
     const center = left + centerOffset / 2;
     for (let i = 0; i < dots; i++) {
       const offset = randomPoint(radius);
-      ctx.fillRect(center + offset.x, center + offset.y, 1, 1);
+      ctx!.fillRect(center + offset.x, center + offset.y, 1, 1);
     }
   }, [size]);
 
-  const handleChange = e => {
-    setSize(e.target.value);
-    dispatch({ type: 'CHANGE_SIZE', payload: size });
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSize(Number(e.target.value));
+    dispatch({ type: "CHANGE_SIZE", payload: size });
   };
 
   return (
     <SizePicker>
       <h2>Choose Size</h2>
-      <canvas width='105' height='105' ref={sizeRef} />
+      <canvas width="105" height="105" ref={sizeRef} />
       <Range
         color={state.color}
-        min='10'
-        max='100'
+        min="10"
+        max="100"
         value={size}
         onChange={e => handleChange(e)}
       />
@@ -64,7 +65,7 @@ const SizePicker = styled.div`
 
   h2 {
     color: white;
-    font-family: 'Permanent Marker', cursive;
+    font-family: "Permanent Marker", cursive;
     font-size: 1.2rem;
     margin-bottom: 10px;
     user-select: none;
@@ -76,7 +77,7 @@ const SizePicker = styled.div`
 `;
 
 const Range = styled.input.attrs({
-  type: 'range',
+  type: "range"
 })`
   -webkit-appearance: none;
   appearance: none;

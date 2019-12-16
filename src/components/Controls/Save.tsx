@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
-import { GraffitiContext } from '../../context';
+import { useGraffitiState } from "../../contexts";
 
 const Save = () => {
-  const { state } = useContext(GraffitiContext);
+  const state = useGraffitiState();
   return (
     <SaveText onClick={state.save} color={state.color}>
       Save Wall
@@ -16,7 +16,7 @@ export default Save;
 
 const SaveText = styled.h2`
   color: white;
-  font-family: 'Permanent Marker', cursive;
+  font-family: "Permanent Marker", cursive;
   font-size: 1.2rem;
   margin-bottom: 10px;
   user-select: none;
