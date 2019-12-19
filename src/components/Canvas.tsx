@@ -41,15 +41,15 @@ const Canvas = () => {
   };
 
   const spray = (canvas: HTMLCanvasElement) => {
-    const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-    ctx.fillStyle = state.color;
+    const ctx = canvas.getContext("2d");
+    ctx!.fillStyle = state.color;
     const radius = state.size / 2;
     const area = radius * radius * Math.PI;
     const dots = Math.ceil(area / 30);
-    ctx.globalCompositeOperation = "source-over";
+    ctx!.globalCompositeOperation = "source-over";
     for (let i = 0; i < dots; i++) {
       const offset = randomPoint(radius);
-      ctx.fillRect(
+      ctx!.fillRect(
         position.offsetX + offset.x,
         position.offsetY + offset.y,
         1,
@@ -59,13 +59,13 @@ const Canvas = () => {
   };
 
   const clearCanvas = () => {
-    const ctx = canvasRef.current.getContext("2d") as CanvasRenderingContext2D;
+    const ctx = canvasRef.current.getContext("2d");
     const img: HTMLImageElement = new Image();
     img.src = background;
     img.onload = () => {
-      const pattern = ctx.createPattern(img, "repeat") as CanvasPattern;
-      ctx.fillStyle = pattern;
-      ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+      const pattern = ctx!.createPattern(img, "repeat") as CanvasPattern;
+      ctx!.fillStyle = pattern;
+      ctx!.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
     };
   };
 
