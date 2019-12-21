@@ -3,11 +3,11 @@ import styled from "styled-components";
 import { saveAs } from "file-saver";
 import background from "../assets/brickwall.jpg";
 
-import { useGraffitiState, useGraffitiDispatch } from "../contexts/";
+import { useGraffitiState, useGraffitiDispatch } from "../../contexts/";
 
 import { onMouseDown, onTouchStart, onMouseMove, onTouchMove } from "./utils";
 
-import CanvasWrapper from "../styles/Canvas";
+import CanvasWrapper from "../../styles/Canvas";
 
 const Canvas = () => {
   const state = useGraffitiState();
