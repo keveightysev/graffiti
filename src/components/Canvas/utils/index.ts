@@ -1,2 +1,2 @@
-export * from "./onDown";
-export * from "./onMove";
+export { default as startSpray } from "./startSpray";
+export { default as sprayMove } from "./sprayMove";

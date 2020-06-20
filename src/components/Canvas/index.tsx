@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { saveAs } from "file-saver";
-import background from "../assets/brickwall.jpg";
+import background from "../../assets/brickwall.jpg";
 
 import { useGraffitiState, useGraffitiDispatch } from "../../contexts/";
 
-import { onMouseDown, onTouchStart, onMouseMove, onTouchMove } from "./utils";
+import { sprayMove, startSpray } from "./utils";
 
 import CanvasWrapper from "../../styles/Canvas";
 
@@ -32,7 +32,7 @@ const Canvas = () => {
     clearCanvas();
     dispatch({
       type: "SET_FUNCTIONS",
-      payload: { clear: clearCanvas, save: saveCanvas }
+      payload: { clear: clearCanvas, save: saveCanvas },
     });
   }, [dispatch]);
 
@@ -70,9 +70,9 @@ const Canvas = () => {
   };
 
   const saveCanvas = () => {
-    canvasRef.current.toBlob(blob => {
+    canvasRef.current.toBlob((blob) => {
       const reader = new FileReader();
-      reader.onload = readEvent => {
+      reader.onload = (readEvent) => {
         const img = new Image() as HTMLImageElement;
         img.onload = () => {
           let canvas = document.createElement("canvas"),
@@ -93,7 +93,7 @@ const Canvas = () => {
 
           const ctx = canvas.getContext("2d");
           ctx!.drawImage(img, 0, 0, width, height);
-          canvas.toBlob(newBlob => {
+          canvas.toBlob((newBlob) => {
             const blob = newBlob as Blob;
             saveAs(blob, "graffiti-wall.png");
           });
@@ -127,14 +127,15 @@ const Canvas = () => {
         width={state.width}
         height={state.height}
         touch-action="none"
+        data-testid="graffiti-canvas"
         onMouseDown={(e: React.MouseEvent) =>
-          onMouseDown(e, canvasRef, setIsPainting, setPosition)
+          startSpray(e, canvasRef, setIsPainting, setPosition)
         }
         onTouchStart={(e: React.TouchEvent) => {
-          onTouchStart(e, canvasRef, setIsPainting, setPosition);
+          startSpray(e, canvasRef, setIsPainting, setPosition);
         }}
         onMouseMove={(e: React.MouseEvent) => {
-          onMouseMove(
+          sprayMove(
             e,
             isPainting,
             clicked,
@@ -145,7 +146,7 @@ const Canvas = () => {
           );
         }}
         onTouchMove={(e: React.TouchEvent) => {
-          onTouchMove(
+          sprayMove(
             e,
             isPainting,
             clicked,
@@ -161,10 +162,10 @@ const Canvas = () => {
       <Instruct
         ref={instructRef}
         onMouseDown={(e: React.MouseEvent) =>
-          onMouseDown(e, canvasRef, setIsPainting, setPosition)
+          startSpray(e, canvasRef, setIsPainting, setPosition)
         }
         onTouchStart={(e: React.TouchEvent) => {
-          onTouchStart(e, canvasRef, setIsPainting, setPosition);
+          startSpray(e, canvasRef, setIsPainting, setPosition);
         }}
         onMouseUp={onUp}
         onTouchEnd={onUp}
