@@ -16,32 +16,40 @@ export default function (
   spray: (canvas: HTMLCanvasElement) => void
 ) {
   e.persist();
-  if (!clicked) {
-    fadeOut();
-  }
   let offsetX = 0,
-    offsetY = 0;
+    offsetY = 0,
+    movement = false;
   if (isPainting && e.type === "mousemove") {
     const { buttons, nativeEvent } = e as MouseEvent;
     if (buttons === 1) {
+      if (!clicked) {
+        fadeOut();
+      }
       offsetX = nativeEvent.offsetX;
       offsetY = nativeEvent.offsetY;
+      movement = true;
     }
   } else if (isPainting && e.type === "touchmove") {
+    if (!clicked) {
+      fadeOut();
+    }
     const { touches } = e as TouchEvent;
     offsetX = touches[0].clientX;
     offsetY = touches[0].clientY;
+    movement = true;
   }
 
-  const canvas = canvasRef!.current!;
-  const rect = canvas.getBoundingClientRect();
-  const updateX =
-    ((offsetX - rect.left + window.pageXOffset) / rect.width) * canvas.width;
-  const updateY =
-    ((offsetY - rect.top + window.pageYOffset) / rect.height) * canvas.height;
-  setPosition({
-    offsetX: updateX,
-    offsetY: updateY,
-  });
-  spray(canvas);
+  if (movement) {
+    const canvas = canvasRef!.current!;
+    const rect = canvas.getBoundingClientRect();
+    const updateX =
+      ((offsetX - rect.left + window.pageXOffset) / rect.width) * canvas.width;
+    const updateY =
+      ((offsetY - rect.top + window.pageYOffset) / rect.height) * canvas.height;
+    setPosition({
+      offsetX: updateX,
+      offsetY: updateY,
+    });
+    spray(canvas);
+  }
 }
