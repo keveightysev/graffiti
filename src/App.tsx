@@ -8,7 +8,6 @@ import { Global } from "./styles/Global";
 function App() {
   useEffect(() => {
     let prevent = false;
-    // const root = document.querySelector('#root');
     const touchStart = (e: TouchEvent) => {
       if (e.touches.length !== 1) {
         return;
