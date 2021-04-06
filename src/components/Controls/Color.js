@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react';
-import { SketchPicker } from 'react-color';
-import styled from 'styled-components';
+import { useContext, useState } from "react";
+import { SketchPicker } from "react-color";
+import styled from "styled-components";
 
-import { GraffitiContext } from '../../context';
+import { GraffitiContext } from "../../context";
 
 const Color = () => {
   const [clicked, setClicked] = useState(false);
@@ -16,7 +16,7 @@ const Color = () => {
         color={state.color}
         disableAlpha
         clicked={clicked}
-        onChange={({ hex }) => dispatch({ type: 'CHANGE_COLOR', payload: hex })}
+        onChange={({ hex }) => dispatch({ type: "CHANGE_COLOR", payload: hex })}
       />
       <Cover clicked={clicked} onMouseDown={() => setClicked(false)} />
     </ColorPicker>
@@ -40,7 +40,7 @@ const Sketch = styled(SketchPicker)`
   position: absolute;
   top: 105px;
   left: 20px;
-  display: ${({ clicked }) => (clicked ? 'block' : 'none')};
+  display: ${({ clicked }) => (clicked ? "block" : "none")};
 `;
 
 const ColorPicker = styled.div`
@@ -57,7 +57,7 @@ const ColorPicker = styled.div`
 
   h2 {
     color: white;
-    font-family: 'Permanent Marker', cursive;
+    font-family: "Permanent Marker", cursive;
     font-size: 1.2rem;
     margin-bottom: 10px;
     user-select: none;
@@ -69,5 +69,5 @@ const Cover = styled.div`
   z-index: -1;
   width: ${window.innerWidth}px;
   height: ${window.innerHeight}px;
-  display: ${({ clicked }) => (clicked ? 'block' : 'none')};
+  display: ${({ clicked }) => (clicked ? "block" : "none")};
 `;

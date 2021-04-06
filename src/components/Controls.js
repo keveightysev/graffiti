@@ -1,12 +1,10 @@
-import React from 'react';
+import Color from "./Controls/Color";
+import Size from "./Controls/Size";
+import Clear from "./Controls/Clear";
+import Save from "./Controls/Save";
+import MobileControls from "./Controls/MobileControls";
 
-import Color from './Controls/Color';
-import Size from './Controls/Size';
-import Clear from './Controls/Clear';
-import Save from './Controls/Save';
-import MobileControls from './Controls/MobileControls';
-
-import { ControlsWrapper } from '../styles/Controls';
+import { ControlsWrapper } from "../styles/Controls";
 
 const Controls = () => {
   return window.innerWidth > 450 ? (

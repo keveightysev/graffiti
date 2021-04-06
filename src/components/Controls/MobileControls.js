@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { Vortex } from 'react-burgers';
+import { useState, useEffect } from "react";
+import styled from "styled-components";
+import { Vortex } from "react-burgers";
 
-import Color from './Color';
-import Size from './Size';
-import Clear from './Clear';
-import Save from './Save';
+import Color from "./Color";
+import Size from "./Size";
+import Clear from "./Clear";
+import Save from "./Save";
 
-import { ControlsWrapper } from '../../styles/Controls';
+import { ControlsWrapper } from "../../styles/Controls";
 
 const MobileControls = () => {
   const [clicked, setClicked] = useState(false);
 
   useEffect(() => {
-    console.log('um');
+    console.log("um");
   }, []);
 
   return (
     <MobileView>
       <Vortex
-        padding='20px'
-        color='#fff'
+        padding="20px"
+        color="#fff"
         active={clicked}
         onClick={() => setClicked(!clicked)}
       />

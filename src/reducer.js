@@ -1,5 +1,5 @@
 export const initialState = {
-  color: '#FC00FF',
+  color: "#FC00FF",
   size: 50,
   clear: null,
   save: null,
@@ -9,11 +9,11 @@ export const initialState = {
 
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'CHANGE_COLOR':
+    case "CHANGE_COLOR":
       return { ...state, color: action.payload };
-    case 'CHANGE_SIZE':
+    case "CHANGE_SIZE":
       return { ...state, size: Number(action.payload) };
-    case 'SET_FUNCTIONS':
+    case "SET_FUNCTIONS":
       return { ...state, ...action.payload };
     default:
       return state;

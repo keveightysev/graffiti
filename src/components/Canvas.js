@@ -1,14 +1,10 @@
-import React, { useState, useRef, useContext, useEffect } from 'react';
-import styled from 'styled-components';
-// import short from 'short-uuid';
-// import moment from 'moment';
-import { saveAs } from 'file-saver';
-import background from '../assets/brickwall.jpg';
+import { useState, useRef, useContext, useEffect } from "react";
+import styled from "styled-components";
+import { saveAs } from "file-saver";
+import background from "../assets/brickwall.jpg";
 
-import { GraffitiContext } from '../context';
-// import { storage } from '../firebase';
-
-import CanvasWrapper from '../styles/Canvas';
+import { GraffitiContext } from "../context";
+import CanvasWrapper from "../styles/Canvas";
 
 const Canvas = () => {
   const { state, dispatch } = useContext(GraffitiContext);
@@ -21,12 +17,12 @@ const Canvas = () => {
   useEffect(() => {
     clearCanvas();
     dispatch({
-      type: 'SET_FUNCTIONS',
+      type: "SET_FUNCTIONS",
       payload: { clear: clearCanvas, save: saveCanvas },
     });
   }, [dispatch]);
 
-  const randomPoint = radius => {
+  const randomPoint = (radius) => {
     for (;;) {
       const x = Math.random() * 2 - 1;
       const y = Math.random() * 2 - 1;
@@ -36,13 +32,13 @@ const Canvas = () => {
     }
   };
 
-  const onDown = e => {
+  const onDown = (e) => {
     e = e || window.event;
-    if (e.buttons === 1 || e.type === 'touchstart') {
+    if (e.buttons === 1 || e.type === "touchstart") {
       let offsetX =
-        e.type === 'touchmove' ? e.touches[0].clientX : e.nativeEvent.offsetX;
+        e.type === "touchmove" ? e.touches[0].clientX : e.nativeEvent.offsetX;
       let offsetY =
-        e.type === 'touchmove' ? e.touches[0].clientY : e.nativeEvent.offsetY;
+        e.type === "touchmove" ? e.touches[0].clientY : e.nativeEvent.offsetY;
       const rect = canvasRef.current.getBoundingClientRect();
       const canvas = canvasRef.current;
       const updateX =
@@ -59,16 +55,16 @@ const Canvas = () => {
     }
   };
 
-  const onMove = e => {
+  const onMove = (e) => {
     e.persist();
-    if (isPainting && (e.buttons === 1 || e.type === 'touchmove')) {
+    if (isPainting && (e.buttons === 1 || e.type === "touchmove")) {
       if (!clicked) {
         fadeOut();
       }
       const offsetX =
-        e.type === 'touchmove' ? e.touches[0].clientX : e.nativeEvent.offsetX;
+        e.type === "touchmove" ? e.touches[0].clientX : e.nativeEvent.offsetX;
       const offsetY =
-        e.type === 'touchmove' ? e.touches[0].clientY : e.nativeEvent.offsetY;
+        e.type === "touchmove" ? e.touches[0].clientY : e.nativeEvent.offsetY;
       const rect = canvasRef.current.getBoundingClientRect();
       const canvas = canvasRef.current;
       const updateX =
@@ -89,42 +85,42 @@ const Canvas = () => {
     setIsPainting(false);
   };
 
-  const spray = canvas => {
-    const ctx = canvas.getContext('2d');
+  const spray = (canvas) => {
+    const ctx = canvas.getContext("2d");
     ctx.fillStyle = state.color;
     const radius = state.size / 2;
     const area = radius * radius * Math.PI;
     const dots = Math.ceil(area / 30);
-    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalCompositeOperation = "source-over";
     for (let i = 0; i < dots; i++) {
       const offset = randomPoint(radius);
       ctx.fillRect(
         position.offsetX + offset.x,
         position.offsetY + offset.y,
         1,
-        1,
+        1
       );
     }
   };
 
   const clearCanvas = () => {
-    const ctx = canvasRef.current.getContext('2d');
+    const ctx = canvasRef.current.getContext("2d");
     const img = new Image();
     img.src = background;
     img.onload = () => {
-      const pattern = ctx.createPattern(img, 'repeat');
+      const pattern = ctx.createPattern(img, "repeat");
       ctx.fillStyle = pattern;
       ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
     };
   };
 
   const saveCanvas = () => {
-    canvasRef.current.toBlob(blob => {
+    canvasRef.current.toBlob((blob) => {
       const reader = new FileReader();
-      reader.onload = readEvent => {
+      reader.onload = (readEvent) => {
         const img = new Image();
-        img.onload = imageEvent => {
-          let canvas = document.createElement('canvas'),
+        img.onload = (imageEvent) => {
+          let canvas = document.createElement("canvas"),
             maxSize = 1000,
             width = img.width,
             height = img.height;
@@ -140,9 +136,9 @@ const Canvas = () => {
           canvas.width = width;
           canvas.height = height;
 
-          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-          canvas.toBlob(newBlob => {
-            saveAs(newBlob, 'graffiti-wall.png');
+          canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+          canvas.toBlob((newBlob) => {
+            saveAs(newBlob, "graffiti-wall.png");
             // const imageRef = storage.child(
             //   `${moment().format('MMMDDYYYY')}/${short.generate()}.png`,
             // );
@@ -175,7 +171,7 @@ const Canvas = () => {
     element.style.opacity = 1;
     (function fade() {
       if ((element.style.opacity -= 0.1) < 0) {
-        element.style.display = 'none';
+        element.style.display = "none";
         setClicked(true);
       } else {
         requestAnimationFrame(fade);
@@ -189,7 +185,7 @@ const Canvas = () => {
         ref={canvasRef}
         width={state.width}
         height={state.height}
-        touch-action='none'
+        touch-action="none"
         onMouseDown={onDown}
         onTouchStart={onDown}
         onMouseMove={onMove}
@@ -205,8 +201,8 @@ const Canvas = () => {
         onTouchEnd={onUp}
         onClick={fadeOut}
       >
-        {state.width > 500 ? 'Click' : 'Touch'} anywhere and drag{' '}
-        {state.height > 500 ? 'your mouse' : 'your finger'} to begin painting!
+        {state.width > 500 ? "Click" : "Touch"} anywhere and drag{" "}
+        {state.height > 500 ? "your mouse" : "your finger"} to begin painting!
       </Instruct>
     </>
   );
@@ -222,7 +218,7 @@ const Instruct = styled.h2`
   font-size: 3rem;
   text-align: center;
   color: white;
-  font-family: 'Permanent Marker', cursive;
+  font-family: "Permanent Marker", cursive;
   user-select: none;
 
   @media (max-width: 450px) {

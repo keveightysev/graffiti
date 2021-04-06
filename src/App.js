@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
+import { useEffect } from "react";
 
-import Canvas from './components/Canvas';
-import Controls from './components/Controls';
+import Canvas from "./components/Canvas";
+import Controls from "./components/Controls";
 
-import { Global } from './styles/Global';
+import { Global } from "./styles/Global";
 
 function App() {
   useEffect(() => {
     let prevent = false;
-    const root = document.querySelector('#root');
-    root.addEventListener('touchstart', e => {
+    const root = document.querySelector("#root");
+    root.addEventListener("touchstart", (e) => {
       if (e.touches.length !== 1) {
         return;
       }
@@ -22,7 +22,7 @@ function App() {
       prevent = scrollY === 0;
     });
 
-    root.addEventListener('touchmove', e => {
+    root.addEventListener("touchmove", (e) => {
       if (prevent) {
         prevent = false;
         e.preventDefault();

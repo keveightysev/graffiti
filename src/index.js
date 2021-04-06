@@ -1,14 +1,13 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from "react-dom";
 
-import { GraffitiProvider } from './context';
-import App from './App';
+import { GraffitiProvider } from "./context";
+import App from "./App";
 
-import './styles/reset.css';
+import "./styles/reset.css";
 
 ReactDOM.render(
   <GraffitiProvider>
     <App />
   </GraffitiProvider>,
-  document.getElementById('root'),
+  document.getElementById("root")
 );

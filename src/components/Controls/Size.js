@@ -1,14 +1,14 @@
-import React, { useContext, useRef, useEffect, useState } from 'react';
-import styled from 'styled-components';
+import { useContext, useRef, useEffect, useState } from "react";
+import styled from "styled-components";
 
-import { GraffitiContext } from '../../context';
+import { GraffitiContext } from "../../context";
 
 const Size = () => {
   const { state, dispatch } = useContext(GraffitiContext);
   const sizeRef = useRef(null);
   const [size, setSize] = useState(state.size);
 
-  const randomPoint = radius => {
+  const randomPoint = (radius) => {
     for (;;) {
       const x = Math.random() * 2 - 1;
       const y = Math.random() * 2 - 1;
@@ -19,8 +19,8 @@ const Size = () => {
   };
 
   useEffect(() => {
-    const ctx = sizeRef.current.getContext('2d');
-    ctx.fillStyle = 'white';
+    const ctx = sizeRef.current.getContext("2d");
+    ctx.fillStyle = "white";
     ctx.clearRect(0, 0, 105, 105);
     const radius = size / 2;
     const area = radius * radius * Math.PI;
@@ -34,21 +34,21 @@ const Size = () => {
     }
   }, [size]);
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     setSize(e.target.value);
-    dispatch({ type: 'CHANGE_SIZE', payload: size });
+    dispatch({ type: "CHANGE_SIZE", payload: size });
   };
 
   return (
     <SizePicker>
       <h2>Choose Size</h2>
-      <canvas width='105' height='105' ref={sizeRef} />
+      <canvas width="105" height="105" ref={sizeRef} />
       <Range
         color={state.color}
-        min='10'
-        max='100'
+        min="10"
+        max="100"
         value={size}
-        onChange={e => handleChange(e)}
+        onChange={(e) => handleChange(e)}
       />
     </SizePicker>
   );
@@ -64,7 +64,7 @@ const SizePicker = styled.div`
 
   h2 {
     color: white;
-    font-family: 'Permanent Marker', cursive;
+    font-family: "Permanent Marker", cursive;
     font-size: 1.2rem;
     margin-bottom: 10px;
     user-select: none;
@@ -76,7 +76,7 @@ const SizePicker = styled.div`
 `;
 
 const Range = styled.input.attrs({
-  type: 'range',
+  type: "range",
 })`
   -webkit-appearance: none;
   appearance: none;
